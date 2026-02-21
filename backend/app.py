@@ -65,7 +65,7 @@ def analyze():
         return jsonify({"error": "Text too short to be Terms & Conditions"}), 400
 
     # Pull optional fields from the request, with defaults if not provided
-    service_type = data.get("service_type", "General")
+    service_type = data.get("service_type", "Detect automatically from text")
     jurisdiction = data.get("jurisdiction", "United States")
     user_concerns = data.get("user_concerns", "None provided")
 

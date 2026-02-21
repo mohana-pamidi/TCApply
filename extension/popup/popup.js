@@ -60,6 +60,7 @@ function displayResults(data) {
         <p style="font-size:13px; color:#333; line-height:1.5;">${data.summary}</p>
 
         ${renderList("⚠️ Key Concerns", data.keyConcerns, "#fef3c7")}
+        ${renderList("⚠️ Targeted Risk Findings", data.targetedRiskFindings, "#fef3c7")}
         ${renderList("🚫 Rights You Give Up", data.rightsGivenUp, "#fee2e2")}
         ${renderList("✅ Positives", data.positives, "#dcfce7")}
     `;
