@@ -1,4 +1,5 @@
 # FinePrint
+Unmask the fine print. Know your risks before you click.
 ## Inspiration
 We believe that privacy shouldn't be hidden behind 50 pages of legal jargon. This project was born from the need to make Terms & Conditions readable. Powered by Google Gemini, our tool analyzes fine print to reveal risk levels and data-sharing practices, putting the power back into the hands of the user.
 
