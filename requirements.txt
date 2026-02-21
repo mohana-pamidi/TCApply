@@ -1,6 +1,6 @@
 google
 google-genai
 google-generativeai
-flask_cors
+flask-cors
 flask
-dotenv
+python-dotenv
