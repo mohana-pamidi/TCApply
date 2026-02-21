@@ -72,7 +72,7 @@ class GeminiClient:
         return text.strip()
     
     # extrating texts that could be high risk, and makes it a summary to send to the prompt.
-    def extract_high_risk_sections(self, text):
+    def extract_high_risk_sections(self, text, user_concerns="None provided"):
         # Diffrent regex patterns 
         risk_patterns = {
             "Arbitration & Dispute": r"dispute resolution|arbitration|governing law|class action waiver",
@@ -81,13 +81,33 @@ class GeminiClient:
             "Termination": r"termination|suspension of account|closing your account"
         }
         
+
+        if user_concerns != "None provided":
+
+            individual_concerns = [c.strip() for c in user_concerns.split(',')]
+
+            for concern in individual_concerns:
+                if concern not in risk_patterns:
+                    
+                    # adding any user concers also to the risk patterns. 
+                    risk_patterns[f"USER CONCERN: {concern}"] = rf"\b{re.escape(concern)}\b"
+
+
         extracted_data = {}
         
         # We look for the header and capture text until the next double newline or major header
         for category, pattern in risk_patterns.items():
             match = re.search(f"({pattern})(.*?)(?=\n\n|\n[A-Z][A-Z\s]+|\Z)", text, re.IGNORECASE | re.DOTALL)
             if match:
-                extracted_data[category] = match.group(0).strip()
+    
+                # Expand the window to find the start and end of the paragraph
+                start = max(0, text.rfind('\n', 0, match.start()))
+                # Look ahead 500 characters but stop at the next major break
+                end = min(len(text), text.find('\n\n', match.end() + 100))
+                if end == -1: end = match.end() + 300
+                
+                context = text[start:end].strip()
+                extracted_data[category] = context
                 
         return extracted_data
 
@@ -122,7 +142,7 @@ class GeminiClient:
             last_period = cleaned_tos.rfind('.', 0, limit)
             cleaned_tos = cleaned_tos[:last_period + 1]
 
-        risks = self.extract_high_risk_sections(cleaned_tos)
+        risks = self.extract_high_risk_sections(cleaned_tos, user_concerns)
         risk_summary = "\n".join([f"--- {k} ---\n{v}" for k, v in risks.items()])
 
 
