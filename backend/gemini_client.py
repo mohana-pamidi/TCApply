@@ -1,12 +1,9 @@
 
-from curses import raw
 import json
 import google.generativeai as genai
 import os 
 import re
 from dotenv import load_dotenv
-import time
-from google.api_core import exceptions
 
 class GeminiClient:
 

@@ -33,9 +33,14 @@ Rate as high risk if goes against const. rights
 
 What we need to do: 
 
-1. API to gemini 
-2. test api connection
-3. Come up with prompt 
-4. Chrome extension
-
-5. connection betwen extnesion and backend  
+1. Tweak prompt - take in information of usr - more user context 
+2. Shoudl be able to read pdfs 
+3. Expand text when spanding side panel
+4. Checklist for types of risks usr is concerned about 
+5. UI better - loading maginifying glass 
+6. Mkae answers more consise 
+7. See if there is a way to bold specific parts of the text 
+8. Documentation 
+9. Make UI pretty 
+10. Make a demo video 
+11. deploy Railyway for flask app 
