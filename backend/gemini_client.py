@@ -19,7 +19,7 @@ class GeminiClient:
         # for model in genai.list_models():
         #     print(model.name)
       
-        self.model = genai.GenerativeModel("gemini-2.5-flash") # change to gemini-2.5-pro later for actual impelemntation
+        self.model = genai.GenerativeModel("veo-3.0-fast-generate-001") # change to gemini-2.5-pro later for actual impelemntation
         self.prompt = None 
         self.response = None
 
