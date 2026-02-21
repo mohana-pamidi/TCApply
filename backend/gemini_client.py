@@ -3,8 +3,6 @@ import google.generativeai as genai
 import os 
 import re
 from dotenv import load_dotenv
-import time
-from google.api_core import exceptions
 
 class GeminiClient:
 
@@ -18,8 +16,8 @@ class GeminiClient:
         #     print(model.name)
       
         self.model = genai.GenerativeModel("gemini-2.5-flash") # change to gemini-2.5-pro later for actual impelemntation
-        self.prompt = None 
-        self.response = None
+        self.prompt = "" 
+        self.response = ""
 
     def load_prompt(self):
         path = os.path.join(os.path.dirname(__file__), "prompt.txt")
@@ -63,16 +61,62 @@ class GeminiClient:
     #     raw = self.makeAPICall()
 
     #     return json.loads(raw)  
+    
+    #Cleaning up text before sending it to the client. 
+
+    def clean_text(self, text):
+        # 1. Remove extra whitespace
+        text = re.sub(r'\s+', ' ', text)
+        # 2. Ensure section numbers start on new lines for better readability
+        text = re.sub(r'(\d+\.\d+)', r'\n\1', text) 
+        return text.strip()
+    
+    def extract_high_risk_sections(self, text):
+        # Diffrent regex patterns 
+        risk_patterns = {
+            "Arbitration & Dispute": r"dispute resolution|arbitration|governing law|class action waiver",
+            "Liability & Indemnity": r"limitation of liability|indemnification|disclaimer of warranties",
+            "Data & Privacy": r"data collection|third party sharing|cookies|user information",
+            "Termination": r"termination|suspension of account|closing your account"
+        }
+        
+        extracted_data = {}
+        
+        # We look for the header and capture text until the next double newline or major header
+        for category, pattern in risk_patterns.items():
+            match = re.search(f"({pattern})(.*?)(?=\n\n|\n[A-Z][A-Z\s]+|\Z)", text, re.IGNORECASE | re.DOTALL)
+            if match:
+                extracted_data[category] = match.group(0).strip()
+                
+        return extracted_data
+
     def update_prompt(self, tos_text, service_type="General", jurisdiction="United States", user_concerns="None provided"):
+        cleaned_tos = self.clean_text(tos_text)
+    
+        # 3. Smart Truncation (don't cut mid-sentence)
+        limit = 15000 # Adjusted for tokens vs characters
+        if len(cleaned_tos) > limit:
+            last_period = cleaned_tos.rfind('.', 0, limit)
+            cleaned_tos = cleaned_tos[:last_period + 1]
+
+        risks = self.extract_high_risk_sections(cleaned_tos)
+        risk_summary = "\n".join([f"--- {k} ---\n{v}" for k, v in risks.items()])
+
+
+        full_body = f"KEY CLAUSES FOUND:\n{risk_summary}\n\nFULL TEXT:\n{cleaned_tos[:10000]}"
+                
         # Read the template prompt file (path relative to this file so it works from any cwd)
         prompt_path = os.path.join(os.path.dirname(__file__), "prompt.txt")
         with open(prompt_path, "r", encoding="utf-8") as f:
             template = f.read()
 
-        # Find the """ markers and insert the T&C text
+        # Find the """ markers and insert the T&C text into the prompt text 
         start = template.find('"""') + 3
         end = template.rfind('"""')
-        template_with_tos = template[:start] + "\n" + tos_text[:12000] + "\n" + template[end:]
+        template_with_tos = template[:start] + "\n" + full_body + "\n" + template[end:]
+
+
+        self.prompt = self.prompt.replace('"""', "").replace("{tos_content}", full_body)
 
         # Now fill in the other placeholders
         filled_prompt = template_with_tos.replace("{service_type}", service_type)
@@ -80,6 +124,7 @@ class GeminiClient:
         filled_prompt = filled_prompt.replace("{user_concerns}", user_concerns)
 
         # Set it as the active prompt
+        
         self.prompt = filled_prompt
 
         print("Prompt fully built, calling Gemini...")
