@@ -147,3 +147,39 @@ function renderList(title, items, bg, formatItem) {
         </div>
     `;
 }
+
+// loads a pdf and returns the extracted text from within it
+
+function extractText(pdfUrl) {
+    var pdf = pdfjsLib.getDocument(pdfUrl);
+
+    return pdf.promise.then(function (pdf) {
+        var totalPageCount = pdf.numPages;
+        var countPromises = [];
+
+
+        // return each page one by one and use getTextContent to extract text
+        for ( var currentPage = 1; currentPage <= totalPageCount; currentPage++) {
+            var page = pdf.getPage(currentPage);
+            countPromises.push(
+                page.then(function (page) {
+                    var textContent = page.getTextContent();
+                    // returns a promise and adds promise to countPromises
+                    return textContent.then(function (text) {
+                        return text.items
+                        .map(function (s) {
+                            return s.str;
+                        })
+                        .join('');
+                    })
+                })
+            )
+        }
+
+        console.log("Page count", totalPageCount);
+
+        return Promise.all(countPromises).then(function (texts) {
+            return texts.join('');
+        })
+    });
+}
