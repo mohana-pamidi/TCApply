@@ -23,7 +23,7 @@
             padding: 0;
             background: var(--bg);
             color: var(--text);
-            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, serif;
         }
 
         body { padding: 16px; }
@@ -117,32 +117,14 @@
     <h1>🔍 FinePrint: Terms and Conditions Analyzer 🔍 </h1>
 
     <div id="concerns-checklist">
-        <div class="check-row">
-            <input type="checkbox" id="1" value="Data Collection & Sharing">
-            <label for="1">Data Collection & Sharing</label>
-        </div>
-
-        <div class="check-row">
-            <input type="checkbox" id="2" value="Tracking & Profiling">
-            <label for="2">Tracking & Profiling</label>
-        </div>
-
-        <div class="check-row">
-            <input type="checkbox" id="3" value="Your Content and IP">
-            <label for="3">Your Content and IP</label>
-        </div>
-
-        <div class="check-row">
-            <input type="checkbox" id="4" value="Policy Changes">
-            <label for="4">Policy Changes</label>
-        </div>
-
-        <div class="check-row">
-            <input type="checkbox" id="5" value="Financial & Subscriptions">
-            <label for="5">Financial & Subscriptions</label>
-        </div>
-
-        <input type="button" id="concerns-button" value="Analyze Terms">
+        <input type="checkbox" id="1" value="Data Collection & Sharing"><label for="1">Data Privacy & Sales</label><span class="info-icon" data-info="How your personal data is collected, stored, shared with third parties, or sold">i</span><br>
+        
+        <input type="checkbox" id="6" value="Arbitration & Class Action"><label for="6">Legal Rights & Arbitration</label><span class="info-icon" data-info="Limits sueing the company in court, joining others in a lawsuit; requires private arbitrator; ">i</span><br>
+        <input type="checkbox" id="7" value="Liability & Indemnity"><label for="7">Financial Risk & Liability</label><span class="info-icon" data-info="Caps on the company's financial responsibilities; User indemnification">i</span><br>
+        <input type="checkbox" id="8" value="AI Training Rights"><label for="8">AI/ML Model Training</label><span class="info-icon" data-info="Whether your content can be used to train AI/ML models or improve algorithms">i</span><br>
+        <input type="checkbox" id="9" value="Account Termination"><label for="9">Account Deletion Rights</label><span class="info-icon" data-info="Conditions for account suspension, termination, and data deletion upon leaving">i</span><br>
+        <input type="checkbox" id="10" value="Policy Changes"><label for="9">Policy Changes</label><span class="info-icon" data-info="Conditions updating terms wihtout notic to user."></span><br>
+        <input type="button" id="concerns-button" value="Analyze Risks">
     </div>
 
     <div id="status"></div>

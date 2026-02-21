@@ -1,29 +1,34 @@
+# FinePrint
+Unmask the fine print. Know your risks before you click.
 ## Inspiration
-Often times people completely disgard Terms & Conditions and just agree to them without actually reading what rights they are giving up or how much of their privacy they are giving to the company. Our project leverages Google Gemini
+We believe that privacy shouldn't be hidden behind 50 pages of legal jargon. This project was born from the need to make Terms & Conditions readable. Powered by Google Gemini, our tool analyzes fine print to reveal risk levels and data-sharing practices, putting the power back into the hands of the user.
 
 ## What it does
-Our project uses a YOLO model to build a real-time construction safety detection system. It identifies and locates objects within an image to see whether workers on a construction site are wearing necessary personal protective equipment such as masks, hard hats, and safety vests. If the system detects a worker is not wearing a mask, hard hat, or safety vest, it will push a notification to the manager attaching an image to let them know that a worker is not in compliance. There have been various accidents in construction sites, but with our project's combination of hardware and machine learning, these challenges can be resolved. 
+Our project uses a specialized Chrome Extension to bridge the gap between complex legal documents and user understanding. By feeding the active page's content into the Google Gemini API, the tool performs a real-time audit of the agreement. It returns a numeric risk and privacy score alongside a breakdown of high-priority concerns and specific rights the user is asked to waive.
 
-## How we built it
-We built the construction safety detection system by first setting up the NVIDIA Jetson Nano. Once the Jetson was set up, we started by installing all the required packages. We then imported a pre-trained Construction-Site-Safety-PPE-Detection YOLO model, a computer vision model that can detect objects from the trained classes which include ["hardHat", "mask", "NO-hardHat", "NO-Mask", "NO-SafetyVest", "person", "safety-cone", "safety-vest", "machinery", vehicles"]. We were able to pipe our camera live stream into the model and extract what the model detected. If "NO-hardHat", "NO-Mask", "NO-SafetyVest" was found, a push notification, including an snippet of the frame it saw, is emailed to a manager to notify them of a safety violation. 
-
-A decision was made to use a pre-trained model instead of training our own from scratch due to the lack of computing resources available to us. Several pre-trained models were tested from HuggingFace and GitHub, and we chose the most accurate one. We piped in a camera video stream to a pre-trained model and wrote scripts to optimize it to output correct image classifications. The scripts processed each image frame to identify if there was a safety violation, and if one was spotted, an email would be sent over Gmail's SMTP server to a manager's email with the suspect image frame attached.
+## How we built FinePrint
+1. Browser Interface (JavaScript): We developed a Chrome Extension using a JavaScript-based sidepanel for the user interface.
+2. Content Extraction (Content Scripts): When triggered, a Content Script programmatically scrapes the active website's Terms & Conditions text, ensuring we capture the exact legal language the user is agreeing to.
+3. Backend Processing (Python/Flask): The extension sends this data to our Flask API. This layer acts as the "brain," managing the communication between the browser and the AI.
+4. AI Analysis (Google Gemini API): The Flask app constructs a specialized prompt containing the T&C text and sends it to Google Gemini. The model is instructed to perform a legal audit, specifically looking for privacy risks and rights-forfeiture.
+5. Data Feedback Loop: Gemini returns a structured analysis, which the Flask app parses and sends back to the Chrome Extension to display the final Numeric Risk Score and key feedback to the user.
 
 ## Challenges we ran into
-Initially, we were planning on training our own model. We found large datasets of PPE images on Kaggle and HuggingFace and searched for resources available to train a computer vision model. These models had thousands of images of different types of PPE like hard hats, safety vests, gloves, masks, etc. We installed heavy machine learning modules like CUDA, CuDNN, and Pytorch that took up multiple gigabytes to prepare for training a model on the datasets we found. However, we were not provided with any NVIDIA GPU access from our university's supercomputer for the hackathon, nor did any of us have access to a different machine powerful enough to train a model of that scale. 
+1. Connecting a Chrome Extension to a local Flask server often triggers Cross-Origin Resource Sharing (CORS) issues. We had to configure the Flask backend specifically to accept requests from the unique chrome-extension:// ID, ensuring secure communication without the browser blocking our data.
 
-Finding an optimal model required much testing and thought. We began our project by running examples provided by NVIDIA's jetson-inference library. These ran on a Docker container, and we attempted to customize it by installing our own packages and modifying the Dockerfile. However, we were unsuccessful and found that using a Docker container did not suit our needs of having a more permanent environment for running models. We decided to use a Python virtual environment instead, since we needed to use many Python packages like Pytorch, ultralytics, and transformers. 
+2. "Scraping" a website sounds easy until you hit a 50-page Terms & Conditions document. We had to refine our Content Scripts to ignore site navigation, ads, and footer clutter, focusing strictly on the legal text to ensure we didn't waste Gemini's context window on irrelevant data.
+
+3. Prompt Engineering for Consistency
+Getting an AI to return a specific numeric score alongside valuable text feedback was a challenge. We spent significant time "tuning" our Gemini prompts to ensure the model consistently formatted its output as a structured response that our Flask app could reliably parse and send back to the UI. We also had trouble with Gemini having halucinations and giving inaccurate scores of different risks.
 
 ## Accomplishments that we're proud of
-We managed to boost the accuracy of the YOLO model's confidence level from 20% to 98%. We were also able to overcome the limited computing power of the Jetson Nano to run an accurate machine learning model to protect the safety of workers.
+We managed to boost the accuracy of our Gemini model by refining our prompt as well as adding specific parameters for the model to look for in specific high risk terms. Additionally we have successfully deployed our Chrome extension through Railway and no longer need to rely on a local host to run the extension and create the API calls. Lastly, we were able to allow users to have safety preferences and allow them to highlight and mark off the risks they care the most about to allow the Gemini API to dive deeper in the specified risks.
 
 ## What we learned
-Many software tools were tested before deciding on which to use in this project. We all learned how to use the Linux/Unix terminal proficiently, since most Jetson Nano interactions involved a command line interface. In addition, we ran Python virtual environments and Docker containers on our own machines, which were both Windows and Mac laptops. 
+Building this tool was a deep dive into the complexities of full-stack AI integration. We learned that prompt engineering is a very important skill for the future, simply asking an AI to "summarize" isn't enough when dealing with dense legal contracts. As well as testing many Gemini Models before landing on Gemini 2.5 Flash to handle our prompts. We had to learn how to structure data, specifically using JSON responses to ensure our Flask backend could reliably parse the AI's feedback. On the frontend, we gained a much deeper understanding of the Chrome Extension lifecycle, particularly how to manage asynchronous communication between content scripts and the popup. Most importantly, we learned the value of secure backend architecture. By deploying to Railway, we practiced moving from a development environment to a production ready state, ensuring our Gemini API keys remained protected on the server side while providing an "always-on" experience for the user.
 
-From experimentation, we found benefits and drawbacks of using pre-trained models. Many that we found online were inaccurate or required specific/outdated configurations. However, some were accurate and helpful. It would have been better if we could make a custom model based off our own data while building off a pre-trained one, but we did not have the computing resources to do so.
-
-## What's next for Gator Guardian 
-We would like to optimize the models so that it can detect different classes of protective equipment in different orientations. For example, a better model could be able to recognize a cut-off image of a hard hat and not flag it for a safety violation. If provided with more funds, we could improve our model quality and mobility. The Jetson Nano was a restrictive platform since it was weaker than a conventional computer, which limited our capability to run advanced computer vision models. However, a small device like the Nano can be placed on a robot and become portable. In the future, if provided with a more powerful hardware, we could run a more accurate model.
+## What's next for FinePrint
+We would like to submit our extension to the Google store for approval. We also want to implement Automated URL Detection, allowing the extension to proactively notify users the moment they land on a "High Risk" page without needing to manually click the popup. Finally, we aim to build a Community Risk Database, where anonymized scores are cached on our backend so that the community can see a "Crowdsourced Safety Rating" for popular websites instantly, reducing the number of redundant API calls and speeding up the user experience.
 
 
 To do list: 
@@ -62,9 +67,11 @@ Rate as high risk if goes against const. rights
 What we need to do: 
 
 1. Tweak prompt - take in information of usr - more user context 
+    - Fix the output to make it concise and not too wordy, right not it is giving the raw output from gemini.
+2. Should be able to read pdfs 
+3. Expand text when spanding side panel
 4. Checklist for types of risks usr is concerned about 
 5. UI better - loading maginifying glass 
-6. Mkae answers more consise 
 7. See if there is a way to bold specific parts of the text 
 8. Documentation 
 9. Make UI pretty 
