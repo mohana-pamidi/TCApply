@@ -44,3 +44,4 @@ What we need to do:
 9. Make UI pretty 
 10. Make a demo video 
 11. deploy Railyway for flask app 
+12. Chat for users to ask about terms and conditions
