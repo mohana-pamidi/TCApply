@@ -45,12 +45,12 @@
 
 function displayResults(data) {
     const riskColor = { Low: "#22c55e", Medium: "#f59e0b", High: "#ef4444" };
-    const scoreColor = data.fairnessScore >= 7 ? "#22c55e" : data.fairnessScore >= 4 ? "#f59e0b" : "#ef4444";
+    const scoreColor = data.riskScore >= 7 ? "#22c55e" : data.riskScore >= 4 ? "#f59e0b" : "#ef4444";
 
     document.getElementById("results").innerHTML = `
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
             <div style="font-size:36px; font-weight:800; color:${scoreColor}">
-                ${data.fairnessScore}/10
+                ${data.riskScore}/10
             </div>
             <div style="padding:6px 12px; border-radius:20px; background:${riskColor[data.privacyRisk]}; color:white; font-weight:600;">
                 ${data.privacyRisk} Privacy Risk
