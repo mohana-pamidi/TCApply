@@ -1,3 +1,5 @@
+<img width="735" height="443" alt="image" src="https://github.com/user-attachments/assets/6ca40564-18d6-4516-9b57-14b734230b6d" />
+
 # FinePrint
 Unmask the fine print. Know your risks before you click.
 ## Inspiration
@@ -9,17 +11,22 @@ Our project uses a specialized Chrome Extension to bridge the gap between comple
 ## How we built FinePrint
 1. Browser Interface (JavaScript): We developed a Chrome Extension using a JavaScript-based sidepanel for the user interface.
 2. Content Extraction (Content Scripts): When triggered, a Content Script programmatically scrapes the active website's Terms & Conditions text, ensuring we capture the exact legal language the user is agreeing to.
-3. Backend Processing (Python/Flask): The extension sends this data to our Flask API. This layer acts as the "brain," managing the communication between the browser and the AI.
+3. Backend Processing (Python/Flask - Deployed on Railway): The extension sends this data to our Flask API. This layer acts as the "brain," managing the communication between the browser and the AI.
 4. AI Analysis (Google Gemini API): The Flask app constructs a specialized prompt containing the T&C text and sends it to Google Gemini. The model is instructed to perform a legal audit, specifically looking for privacy risks and rights-forfeiture.
 5. Data Feedback Loop: Gemini returns a structured analysis, which the Flask app parses and sends back to the Chrome Extension to display the final Numeric Risk Score and key feedback to the user.
 
 ## Challenges we ran into
 1. Connecting a Chrome Extension to a local Flask server often triggers Cross-Origin Resource Sharing (CORS) issues. We had to configure the Flask backend specifically to accept requests from the unique chrome-extension:// ID, ensuring secure communication without the browser blocking our data.
 
-2. "Scraping" a website sounds easy until you hit a 50-page Terms & Conditions document. We had to refine our Content Scripts to ignore site navigation, ads, and footer clutter, focusing strictly on the legal text to ensure we didn't waste Gemini's context window on irrelevant data.
+2. "Scraping" a website sounds easy until you hit a 50-page Terms & Conditions document. We had to refine our Content Scripts to ignore site navigation, ads, and footer clutter, focusing strictly on the legal text to ensure we didn't waste Gemini's context window on irrelevant data. We also had to take into account the multiple of ways these terms are formatted including HTML scirpts, and pdfs.
 
 3. Prompt Engineering for Consistency
-Getting an AI to return a specific numeric score alongside valuable text feedback was a challenge. We spent significant time "tuning" our Gemini prompts to ensure the model consistently formatted its output as a structured response that our Flask app could reliably parse and send back to the UI. We also had trouble with Gemini having halucinations and giving inaccurate scores of different risks.
+Getting an AI to return a specific numeric score alongside valuable text feedback was a challenge, especially when the numeric score can be subjective in terms of what a user defines as "risky." We spent significant time learning how to pre-process data for Gemini prompts to ensure the model consistently formatted its output as a structured response for our Flask app. 
+
+4. Deployment to Railway
+deploying our flask app was challenging as we had to connect the port.
+
+
 
 ## Accomplishments that we're proud of
 We managed to boost the accuracy of our Gemini model by refining our prompt as well as adding specific parameters for the model to look for in specific high risk terms. Additionally we have successfully deployed our Chrome extension through Railway and no longer need to rely on a local host to run the extension and create the API calls. Lastly, we were able to allow users to have safety preferences and allow them to highlight and mark off the risks they care the most about to allow the Gemini API to dive deeper in the specified risks.
