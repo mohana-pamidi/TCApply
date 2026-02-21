@@ -99,7 +99,15 @@ class GeminiClient:
         for category, pattern in risk_patterns.items():
             match = re.search(f"({pattern})(.*?)(?=\n\n|\n[A-Z][A-Z\s]+|\Z)", text, re.IGNORECASE | re.DOTALL)
             if match:
-                extracted_data[category] = match.group(0).strip()
+    
+                # Expand the window to find the start and end of the paragraph
+                start = max(0, text.rfind('\n', 0, match.start()))
+                # Look ahead 500 characters but stop at the next major break
+                end = min(len(text), text.find('\n\n', match.end() + 100))
+                if end == -1: end = match.end() + 300
+                
+                context = text[start:end].strip()
+                extracted_data[category] = context
                 
         return extracted_data
 

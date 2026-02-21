@@ -21,11 +21,20 @@ Provide:
 6. Targeted Risk Findings: Specifically address the User's Specific Concerns listed above. State if the risk is present, summarize the relevant clause, and assign a severity score (1-10) if present.
 7. Plain English Summary: A 2-3 sentence summary a non-lawyer would understand.
 
-CRITICAL SCORING & FILTERING INSTRUCTIONS:
-1. PRIMARY LENS: The user's specific concerns ({user_concerns}) are the most important part of this audit. 
-2. OVERALL RISK SCORE: When calculating the Overall Risk Score, you must use a weighted approach. Do not treat all risks equally. A single severe risk (e.g., unilateral rule changes without notice, mandatory binding arbitration, total IP surrender, or broad indemnification) is highly abusive and should drastically increase the risk Score (e.g., resulting in a 6-10) even if the total number of risks is low. Minor risks (like standard cookies) should barely affect the score. A "Critical" risk (unilateral changes, mandatory arbitration) or a direct hit on a user's "{user_concerns}" must result in a score of 8-10.
-3. SILENCE IS RISK: If the user is concerned about a specific right (e.g., "Data Deletion") and the text is silent on it, categorize this as a "High" risk finding in the targeted section.
 
+CRITICAL SCORING & FILTERING INSTRUCTIONS:
+1. PRIMARY LENS: Use {user_concerns} as the priority. If a clause matches a concern, analyze it deeply.
+
+2. BALANCED RISK SCORING: 
+   - 8-10 (CRITICAL): Only for truly abusive terms (e.g., "We can sell your SSN," "You waive all rights to sue," "We own your physical DNA/IP forever").
+   - 5-7 (MEDIUM/HIGH): For terms that match {user_concerns} but are industry-standard (e.g., standard data collection for ads).
+   - 1-4 (LOW): For standard operational clauses (e.g., essential cookies, basic site maintenance, use of email address).
+
+3. CALIBRATED SILENCE: 
+   - If the text is silent on a {user_concerns}, do NOT automatically rate it a 10. 
+   - Instead, rate it a 5 ("Ambiguous") and explain that the lack of mention means the user has no explicit protection, rather than an active violation.
+   - Only rate silence as a 10 if the service type ({service_type}) strictly requires that protection by law (e.g., a Banking app silent on Fraud Protection).
+   
 Respond strictly in the following JSON format only, with no markdown formatting or conversational text:
 {
   "riskScore": 3,
