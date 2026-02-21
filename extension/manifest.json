@@ -1,0 +1,16 @@
+{
+    "name": "T&C Apply",
+    "description": "Scans Terms and Conditions and flags privacy risks",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+      "default_popup": "popup/popup.html",
+      "default_icon": "icons/hello_extension.png"
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["content.js"]
+      }
+    ]
+  }
