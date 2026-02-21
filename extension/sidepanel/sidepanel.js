@@ -1,7 +1,13 @@
-(async () => {
+const button = document.getElementById("concerns-button");
+const checklist = document.getElementById("concerns-checklist");
+
+button.addEventListener('click', async(event) => {
+
+    // hide checklist once button is clicked 
+    checklist.style.display = "none";
     console.log("Side panel starting...");
 
-    // Show loading state
+    // Show loading state 
     document.getElementById("status").textContent = "Scanning page for Terms & Conditions...";
 
     try {
@@ -72,8 +78,7 @@
         console.error("Error:", error);
         document.getElementById("status").textContent = "Error: " + error.message;
     }
-})();
-
+});
 
 function displayResults(data) {
     const riskColor = { Low: "#22c55e", Medium: "#f59e0b", High: "#ef4444" };
