@@ -19,7 +19,7 @@
         document.getElementById("status").textContent = "Analyzing with AI...";
 
         // Step 2 - Send the text to Flask
-        const flaskResponse = await fetch("http://127.0.0.1:5000/analyze", {
+        const flaskResponse = await fetch("https://tcapply-production.up.railway.app/analyze", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text: response.text })

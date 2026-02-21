@@ -64,7 +64,7 @@ button.addEventListener('click', async(event) => {
         document.getElementById("status").textContent = "Analyzing with AI...";
 
         // Send the text to Flask but with user preferences now 
-        const flaskResponse = await fetch("tcapply-production.up.railway.app/analyze", {
+        const flaskResponse = await fetch("https://tcapply-production.up.railway.app/analyze", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 
