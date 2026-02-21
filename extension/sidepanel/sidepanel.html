@@ -87,6 +87,44 @@
             cursor: pointer;
         }
 
+        .info-icon {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            color: #6b7280;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: default;
+            margin-left: auto;
+        }
+
+        .info-icon::after {
+            content: attr(data-info);
+            position: absolute;
+            right: 0;
+            top: 22px;
+            background: #1f2937;
+            color: white;
+            font-size: 11px;
+            font-weight: 400;
+            padding: 6px 8px;
+            border-radius: 6px;
+            width: 200px;
+            line-height: 1.4;
+            display: none;
+            z-index: 10;
+        }
+
+        .info-icon:hover::after {
+            display: block;
+        }
+
+
         #concerns-button {
             width: 100%;
             margin-top: 4px;
@@ -117,15 +155,54 @@
     <h1>🔍 FinePrint: Terms and Conditions Analyzer 🔍 </h1>
 
     <div id="concerns-checklist">
-        <input type="checkbox" id="1" value="Data Collection & Sharing"><label for="1">Data Privacy & Sales</label><span class="info-icon" data-info="How your personal data is collected, stored, shared with third parties, or sold">i</span><br>
-        
-        <input type="checkbox" id="6" value="Arbitration & Class Action"><label for="6">Legal Rights & Arbitration</label><span class="info-icon" data-info="Limits sueing the company in court, joining others in a lawsuit; requires private arbitrator; ">i</span><br>
-        <input type="checkbox" id="7" value="Liability & Indemnity"><label for="7">Financial Risk & Liability</label><span class="info-icon" data-info="Caps on the company's financial responsibilities; User indemnification">i</span><br>
-        <input type="checkbox" id="8" value="AI Training Rights"><label for="8">AI/ML Model Training</label><span class="info-icon" data-info="Whether your content can be used to train AI/ML models or improve algorithms">i</span><br>
-        <input type="checkbox" id="9" value="Account Termination"><label for="9">Account Deletion Rights</label><span class="info-icon" data-info="Conditions for account suspension, termination, and data deletion upon leaving">i</span><br>
-        <input type="checkbox" id="10" value="Policy Changes"><label for="9">Policy Changes</label><span class="info-icon" data-info="Conditions updating terms wihtout notic to user."></span><br>
-        <input type="button" id="concerns-button" value="Analyze Risks">
+        <div class="check-row">
+            <input type="checkbox" id="1" value="Data Collection & Sharing">
+            <label for="1">Data Privacy & Sales</label>
+            <span class="info-icon" data-info="How your personal data is collected, stored, shared with third parties, or sold">i</span>
+        </div>
+
+        <div class="check-row">
+            <input type="checkbox" id="2" value="Arbitration & Class Action">
+            <label for="2">Legal Rights & Arbitration</label>
+            <span class="info-icon" data-info="Limits suing the company in court, joining others in a lawsuit; requires private arbitrator; ">i</span>
+        </div>
+
+        <div class="check-row">
+            <input type="checkbox" id="3" value="Liability & Indemnity">
+            <label for="3">Financial Risk & Liability</label>
+            <span class="info-icon" data-info="Caps on the company's financial responsibilities; User indemnification">i</span>
+        </div>
+
+        <div class="check-row">
+            <input type="checkbox" id="4" value="AI Training Rights">
+            <label for="4">AI/ML Model Training</label>
+            <span class="info-icon" data-info="Whether your content can be used to train AI/ML models or improve algorithms">i</span>
+        </div>
+
+        <div class="check-row">
+            <input type="checkbox" id="5" value="Account Termination">
+            <label for="5">Account Deletion Rights</label>
+            <span class="info-icon" data-info="Conditions for account suspension, termination, and data deletion upon leaving">i</span>
+        </div>
+
+        <div class="check-row">
+            <input type="checkbox" id="6" value="Policy Changes">
+            <label for="6">Policy Changes</label>
+            <span class="info-icon" data-info="Conditions updating terms wihtout notic to user.">i</span>
+        </div>
+
+        <input type="button" id="concerns-button" value="Analyze Terms">
     </div>
+
+    <!-- <div id="concerns-checklist">
+        <input type="checkbox" id="1" value="Data Collection & Sharing"><label for="1">Data Privacy & Sales</label><span class="info-icon" data-info="How your personal data is collected, stored, shared with third parties, or sold">i</span><br>
+        <input type="checkbox" id="2" value="Arbitration & Class Action"><label for="6">Legal Rights & Arbitration</label><span class="info-icon" data-info="Limits sueing the company in court, joining others in a lawsuit; requires private arbitrator; ">i</span><br>
+        <input type="checkbox" id="3" value="Liability & Indemnity"><label for="7">Financial Risk & Liability</label><span class="info-icon" data-info="Caps on the company's financial responsibilities; User indemnification">i</span><br>
+        <input type="checkbox" id="4" value="AI Training Rights"><label for="8">AI/ML Model Training</label><span class="info-icon" data-info="Whether your content can be used to train AI/ML models or improve algorithms">i</span><br>
+        <input type="checkbox" id="5" value="Account Termination"><label for="9">Account Deletion Rights</label><span class="info-icon" data-info="Conditions for account suspension, termination, and data deletion upon leaving">i</span><br>
+        <input type="checkbox" id="6" value="Policy Changes"><label for="9">Policy Changes</label><span class="info-icon" data-info="Conditions updating terms wihtout notic to user."></span><br>
+        <input type="button" id="concerns-button" value="Analyze Risks">
+    </div> -->
 
     <div id="status"></div>
     <div id="results"></div>
