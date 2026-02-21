@@ -1,6 +1,6 @@
 {
-    "name": "T&C Apply",
-    "description": "Scans Terms and Conditions and flags privacy risks",
+    "name": "Fine Print",
+    "description": "Scans Terms and Conditions and flags concerns, rights given up, and positives.",
     "version": "1.0",
     "manifest_version": 3,
     "action": {

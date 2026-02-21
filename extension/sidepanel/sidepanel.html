@@ -4,33 +4,145 @@
     <meta charset="UTF-8" />
     <title>FinePrint: Terms & Conditions Analyzer</title>
     <style>
-        body { width: 100%; font-family: system-ui, serif; padding: 16px; margin: 0; background-color: rgb(183, 224, 245); color: white; }
-        h1 { font-size: 25px; margin: 0 0 4px; }
-        #status { color: #ebe9e9; font-size: 13px; margin-bottom: 12px; }
-        #results { color: navy; }
-        #concerns-checklist { color: navy; }
+        :root {
+            --bg: #fffdf7;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #f3e8c8;
+            --brand: #f59e0b;
+            --brand-hover: #d97706;
+            --shadow: 0 8px 20px rgba(180, 120, 0, 0.14);
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        }
+
+        body { padding: 16px; }
+
+        h1 {
+            font-size: 20px;
+            margin: 0 0 10px;
+            line-height: 1.25;
+            color: black;
+            letter-spacing: -0.02em;
+        }
+
+        #status {
+            color: var(--muted);
+            font-size: 13px;
+            margin: 4px 0;
+            min-height: 0;
+        }
+
+        #concerns-checklist {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: none;
+            padding: 12px;
+            color: #1e293b;
+            display: grid;
+            gap: 10px;
+        }
+
+        .check-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            background: #ffffff;
+            transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+
+        .check-row:hover {
+            border-color: #9ca3af;
+            background: #f9fafb;
+        }
+
+        .check-row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            accent-color: #6b7280;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .check-row label {
+            font-size: 14px;
+            line-height: 1.35;
+            font-weight: 600;
+            color: #4b5563;
+            cursor: pointer;
+        }
+
+        #concerns-button {
+            width: 100%;
+            margin-top: 4px;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #111827;
+            background: #ffffff;
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+            cursor: pointer;
+            transition: transform .08s ease, filter .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+
+        #concerns-button:hover {
+            filter: none;
+            background: #f9fafb;
+            box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+        }
+
+        #concerns-button:active { transform: translateY(1px); }
+
+        #results { color: #0f172a; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <h1>🔍 FinePrint: Terms & Conditions Analyzer 🔍 </h1>
+    <h1>🔍 FinePrint: Terms and Conditions Analyzer 🔍 </h1>
 
     <div id="concerns-checklist">
-        <input type="checkbox" id= "1" value="Data Collection & Sharing">
-        <label for="1">Data Collection & Sharing</label><br>
+        <div class="check-row">
+            <input type="checkbox" id="1" value="Data Collection & Sharing">
+            <label for="1">Data Collection & Sharing</label>
+        </div>
 
-        <input type="checkbox" id= "2" value="Tracking & Profiling">
-        <label for="2">Tracking & Profiling</label><br>
+        <div class="check-row">
+            <input type="checkbox" id="2" value="Tracking & Profiling">
+            <label for="2">Tracking & Profiling</label>
+        </div>
 
-        <input type="checkbox" id= "3" value="Your Content and IP">
-        <label for="3">Your Content and IP</label><br>
+        <div class="check-row">
+            <input type="checkbox" id="3" value="Your Content and IP">
+            <label for="3">Your Content and IP</label>
+        </div>
 
-        <input type="checkbox" id= "4" value="Policy Changes">
-        <label for="4">Policy Changes</label><br>
+        <div class="check-row">
+            <input type="checkbox" id="4" value="Policy Changes">
+            <label for="4">Policy Changes</label>
+        </div>
 
-        <input type="checkbox" id= "5" value="Financial & Subscriptions">
-        <label for="5">Financial & Subscriptions</label><br>
+        <div class="check-row">
+            <input type="checkbox" id="5" value="Financial & Subscriptions">
+            <label for="5">Financial & Subscriptions</label>
+        </div>
 
-        <input type="button" id="concerns-button" value="Submit">
+        <input type="button" id="concerns-button" value="Analyze Terms">
     </div>
 
     <div id="status"></div>
