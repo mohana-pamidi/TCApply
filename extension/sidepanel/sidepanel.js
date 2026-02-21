@@ -5,9 +5,35 @@
     document.getElementById("status").textContent = "Scanning page for Terms & Conditions...";
 
     try {
-        // Step 1 - Ask content.js to extract T&C text from the page
+        // Step 1 - Get active tab and ensure we can talk to it
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        const response = await chrome.tabs.sendMessage(tab.id, { action: "extractT&C" });
+        if (!tab?.id) {
+            document.getElementById("status").textContent = "No tab found. Open a webpage first.";
+            return;
+        }
+        // Pages like chrome://, edge://, or extension store can't run content scripts
+        const restricted = /^(chrome|edge|about|chrome-extension):\/\//.test(tab.url || "");
+        if (restricted) {
+            document.getElementById("status").textContent = "Open a normal webpage (e.g. a site's Terms or Privacy page) and try again.";
+            return;
+        }
+
+        // Try to get T&C from content script; inject and retry if not loaded (e.g. tab opened before extension)
+        let response;
+        try {
+            response = await chrome.tabs.sendMessage(tab.id, { action: "extractT&C" });
+        } catch (e) {
+            if (e?.message?.includes("Receiving end does not exist")) {
+                await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ["content.js"] });
+                response = await chrome.tabs.sendMessage(tab.id, { action: "extractT&C" });
+            } else {
+                throw e;
+            }
+        }
+        if (response === undefined) {
+            document.getElementById("status").textContent = "Could not read this page. Try refreshing the page, then open the side panel again.";
+            return;
+        }
 
         if (!response?.found) {
             document.getElementById("status").textContent = "No Terms & Conditions found on this page.";
@@ -25,12 +51,18 @@
             body: JSON.stringify({ text: response.text })
         });
 
+        let result;
+        try {
+            result = await flaskResponse.json();
+        } catch (_) {
+            result = {};
+        }
         if (!flaskResponse.ok) {
-            throw new Error("Server error: " + flaskResponse.status);
+            const msg = result?.error || "Server error: " + flaskResponse.status;
+            throw new Error(msg);
         }
 
-        // Step 3 - Get the result and display it
-        const result = await flaskResponse.json();
+        // Step 3 - Display the result
         console.log("Analysis result:", result);
 
         document.getElementById("status").textContent = "";

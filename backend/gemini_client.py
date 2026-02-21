@@ -1,4 +1,3 @@
-
 import json
 import google.generativeai as genai
 import os 
@@ -21,7 +20,8 @@ class GeminiClient:
         self.response = None
 
     def load_prompt(self):
-        with open("prompt.txt", "r", encoding="utf-8") as f:
+        path = os.path.join(os.path.dirname(__file__), "prompt.txt")
+        with open(path, "r", encoding="utf-8") as f:
             self.prompt = f.read()
         
     def makeAPICall(self):
@@ -62,8 +62,9 @@ class GeminiClient:
 
     #     return json.loads(raw)  
     def update_prompt(self, tos_text, service_type="General", jurisdiction="United States", user_concerns="None provided"):
-        # Read the template prompt file
-        with open("prompt.txt", "r", encoding="utf-8") as f:
+        # Read the template prompt file (path relative to this file so it works from any cwd)
+        prompt_path = os.path.join(os.path.dirname(__file__), "prompt.txt")
+        with open(prompt_path, "r", encoding="utf-8") as f:
             template = f.read()
 
         # Find the """ markers and insert the T&C text
