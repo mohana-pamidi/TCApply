@@ -4,13 +4,21 @@
     "version": "1.0",
     "manifest_version": 3,
     "action": {
-      "default_popup": "popup/popup.html",
       "default_icon": "icons/hello_extension.png"
+    },
+    "background": {
+      "service_worker": "background.js"
     },
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
         "js": ["content.js"]
       }
-    ]
+    ],
+    "permissions": [
+      "sidePanel"
+    ],
+    "side_panel": {
+      "default_path": "sidepanel/sidepanel.html"
+    }
   }
