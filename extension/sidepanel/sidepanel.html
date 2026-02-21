@@ -4,58 +4,218 @@
     <meta charset="UTF-8" />
     <title>FinePrint: Terms & Conditions Analyzer</title>
     <style>
-        body { width: 380px; font-family: system-ui, serif; padding: 16px; margin: 0; background-color: rgb(183, 224, 245); color: white; }
-        h1 { font-size: 25px; margin: 0 0 4px; }
-        #status { color: #ebe9e9; font-size: 13px; margin-bottom: 12px; }
-        #results { color: navy; }
-        #concerns-checklist { color: navy; }
+        :root {
+            --bg: #fffdf7;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #f3e8c8;
+            --brand: #f59e0b;
+            --brand-hover: #d97706;
+            --shadow: 0 8px 20px rgba(180, 120, 0, 0.14);
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, serif;
+        }
+
+        body { padding: 16px; }
+
+        h1 {
+            font-size: 20px;
+            margin: 0 0 10px;
+            line-height: 1.25;
+            color: black;
+            letter-spacing: -0.02em;
+        }
+
+        #status {
+            color: var(--muted);
+            font-size: 13px;
+            margin: 4px 0;
+            min-height: 0;
+        }
+
+        #concerns-checklist {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: none;
+            padding: 12px;
+            color: #1e293b;
+            display: grid;
+            gap: 10px;
+        }
+
+        .check-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            background: #ffffff;
+            transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+
+        .check-row:hover {
+            border-color: #9ca3af;
+            background: #f9fafb;
+        }
+
+        .check-row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            accent-color: #6b7280;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .check-row label {
+            font-size: 14px;
+            line-height: 1.35;
+            font-weight: 600;
+            color: #4b5563;
+            cursor: pointer;
+        }
+
         .info-icon {
-            display: inline-block;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             width: 16px;
             height: 16px;
-            background-color: #555;
-            color: white;
             border-radius: 50%;
-            text-align: center;
+            background: #e5e7eb;
+            color: #6b7280;
             font-size: 11px;
-            line-height: 16px;
-            margin-left: 6px;
-            cursor: help;
-            position: relative;
+            font-weight: 700;
+            cursor: default;
+            margin-left: auto;
         }
-        .info-icon:hover::after {
+
+        .info-icon::after {
             content: attr(data-info);
             position: absolute;
-            left: 20px;
-            top: -5px;
-            background-color: #333;
+            right: 0;
+            top: 22px;
+            background: #1f2937;
             color: white;
-            padding: 8px 10px;
+            font-size: 11px;
+            font-weight: 400;
+            padding: 6px 8px;
             border-radius: 6px;
-            font-size: 12px;
             width: 200px;
-            z-index: 100;
-            white-space: normal;
+            line-height: 1.4;
+            display: none;
+            z-index: 10;
         }
+
+        .info-icon:hover::after {
+            display: block;
+        }
+
+
+        #concerns-button {
+            width: 100%;
+            margin-top: 4px;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #111827;
+            background: #ffffff;
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+            cursor: pointer;
+            transition: transform .08s ease, filter .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+
+        #concerns-button:hover {
+            filter: none;
+            background: #f9fafb;
+            box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+        }
+
+        #concerns-button:active { transform: translateY(1px); }
+
+        #results { color: #0f172a; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <h1>🔍 FinePrint: Terms & Conditions Analyzer 🔍 </h1>
+    <h1>🔍 FinePrint: Terms and Conditions Analyzer 🔍 </h1>
 
     <div id="concerns-checklist">
-        <input type="checkbox" id="1" value="Data Collection & Sharing"><label for="1">Data Privacy & Sales</label><span class="info-icon" data-info="How your personal data is collected, stored, shared with third parties, or sold">i</span><br>
-        
-        <input type="checkbox" id="6" value="Arbitration & Class Action"><label for="6">Legal Rights & Arbitration</label><span class="info-icon" data-info="Limits sueing the company in court, joining others in a lawsuit; requires private arbitrator; ">i</span><br>
-        <input type="checkbox" id="7" value="Liability & Indemnity"><label for="7">Financial Risk & Liability</label><span class="info-icon" data-info="Caps on the company's financial responsibilities; User indemnification">i</span><br>
-        <input type="checkbox" id="8" value="AI Training Rights"><label for="8">AI/ML Model Training</label><span class="info-icon" data-info="Whether your content can be used to train AI/ML models or improve algorithms">i</span><br>
-        <input type="checkbox" id="9" value="Account Termination"><label for="9">Account Deletion Rights</label><span class="info-icon" data-info="Conditions for account suspension, termination, and data deletion upon leaving">i</span><br>
-        <input type="checkbox" id="10" value="Policy Changes"><label for="9">Policy Changes</label><span class="info-icon" data-info="Conditions updating terms wihtout notic to user."></span><br>
-        <input type="button" id="concerns-button" value="Analyze Risks">
+        <div class="check-row">
+            <input type="checkbox" id="1" value="Data Collection & Sharing">
+            <label for="1">Data Privacy & Sales</label>
+            <span class="info-icon" data-info="How your personal data is collected, stored, shared with third parties, or sold">i</span>
+        </div>
+
+        <div class="check-row">
+            <input type="checkbox" id="2" value="Arbitration & Class Action">
+            <label for="2">Legal Rights & Arbitration</label>
+            <span class="info-icon" data-info="Limits suing the company in court, joining others in a lawsuit; requires private arbitrator; ">i</span>
+        </div>
+
+        <div class="check-row">
+            <input type="checkbox" id="3" value="Liability & Indemnity">
+            <label for="3">Financial Risk & Liability</label>
+            <span class="info-icon" data-info="Caps on the company's financial responsibilities; User indemnification">i</span>
+        </div>
+
+        <div class="check-row">
+            <input type="checkbox" id="4" value="AI Training Rights">
+            <label for="4">AI/ML Model Training</label>
+            <span class="info-icon" data-info="Whether your content can be used to train AI/ML models or improve algorithms">i</span>
+        </div>
+
+        <div class="check-row">
+            <input type="checkbox" id="5" value="Account Termination">
+            <label for="5">Account Deletion Rights</label>
+            <span class="info-icon" data-info="Conditions for account suspension, termination, and data deletion upon leaving">i</span>
+        </div>
+
+        <div class="check-row">
+            <input type="checkbox" id="6" value="Policy Changes">
+            <label for="6">Policy Changes</label>
+            <span class="info-icon" data-info="Conditions updating terms wihtout notic to user.">i</span>
+        </div>
+
+        <input type="button" id="concerns-button" value="Analyze Terms">
     </div>
+
+    <!-- <div id="concerns-checklist">
+        <input type="checkbox" id="1" value="Data Collection & Sharing"><label for="1">Data Privacy & Sales</label><span class="info-icon" data-info="How your personal data is collected, stored, shared with third parties, or sold">i</span><br>
+        <input type="checkbox" id="2" value="Arbitration & Class Action"><label for="6">Legal Rights & Arbitration</label><span class="info-icon" data-info="Limits sueing the company in court, joining others in a lawsuit; requires private arbitrator; ">i</span><br>
+        <input type="checkbox" id="3" value="Liability & Indemnity"><label for="7">Financial Risk & Liability</label><span class="info-icon" data-info="Caps on the company's financial responsibilities; User indemnification">i</span><br>
+        <input type="checkbox" id="4" value="AI Training Rights"><label for="8">AI/ML Model Training</label><span class="info-icon" data-info="Whether your content can be used to train AI/ML models or improve algorithms">i</span><br>
+        <input type="checkbox" id="5" value="Account Termination"><label for="9">Account Deletion Rights</label><span class="info-icon" data-info="Conditions for account suspension, termination, and data deletion upon leaving">i</span><br>
+        <input type="checkbox" id="6" value="Policy Changes"><label for="9">Policy Changes</label><span class="info-icon" data-info="Conditions updating terms wihtout notic to user."></span><br>
+        <input type="button" id="concerns-button" value="Analyze Risks">
+    </div> -->
 
     <div id="status"></div>
     <div id="results"></div>
 
-    <script src="sidepanel.js"></script>
+    <script type="module" src="sidepanel.js"></script>
+
+    <!-- load the pdf.js library as a module
+    <script type="module">
+        import * as pdfjsLib from 'https://mozilla.github.io/pdf.js/build/pdf.mjs';
+
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+            'https://mozilla.github.io/pdf.mjs/build/pdf.worker.mjs';
+    </script> -->
+    
 </body>
 </html>

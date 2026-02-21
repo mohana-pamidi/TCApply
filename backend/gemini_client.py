@@ -111,6 +111,28 @@ class GeminiClient:
                 
         return extracted_data
 
+    def parse_model_json(self, raw_text):
+        # Strip markdown fences if present.
+        cleaned = re.sub(r"```json|```", "", raw_text).strip()
+
+        # 1) Fast path: response is already valid JSON.
+        try:
+            return json.loads(cleaned)
+        except json.JSONDecodeError:
+            pass
+
+        # 2) Fallback: extract first JSON object block and parse it.
+        obj_match = re.search(r"\{[\s\S]*\}", cleaned)
+        if obj_match:
+            try:
+                return json.loads(obj_match.group(0))
+            except json.JSONDecodeError:
+                pass
+
+        # 3) Give a useful error preview to help debug bad model output.
+        preview = cleaned[:500].replace("\n", " ")
+        raise ValueError(f"Model returned invalid JSON. Preview: {preview}")
+
     def update_prompt(self, tos_text, service_type="General", jurisdiction="United States", user_concerns="None provided"):
         cleaned_tos = self.clean_text(tos_text)
     
@@ -137,8 +159,6 @@ class GeminiClient:
         template_with_tos = template[:start] + "\n" + full_body + "\n" + template[end:]
 
 
-        self.prompt = self.prompt.replace('"""', "").replace("{tos_content}", full_body)
-
         # Now fill in the other placeholders
         filled_prompt = template_with_tos.replace("{service_type}", service_type)
         filled_prompt = filled_prompt.replace("{jurisdiction}", jurisdiction)
@@ -152,8 +172,7 @@ class GeminiClient:
 
         # Call Gemini and parse the response
         raw = self.makeAPICall()
-        cleaned = re.sub(r"```json|```", "", raw).strip()
-        return json.loads(cleaned)
+        return self.parse_model_json(raw)
 
 
 

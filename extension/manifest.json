@@ -1,6 +1,6 @@
 {
-    "name": "T&C Apply",
-    "description": "Scans Terms and Conditions and flags privacy risks",
+    "name": "Fine Print",
+    "description": "Scans Terms and Conditions and flags concerns, rights given up, and positives.",
     "version": "1.0",
     "manifest_version": 3,
     "action": {
@@ -18,7 +18,8 @@
     "permissions": [
       "sidePanel",
       "scripting",
-      "activeTab"
+      "activeTab",
+      "tabs"
     ],
     "host_permissions": [
       "http://127.0.0.1:5000/*",
@@ -27,5 +28,11 @@
     ],
     "side_panel": {
       "default_path": "sidepanel/sidepanel.html"
-    }
+    },
+    "web_accessible_resources": [
+      { 
+        "resources": ["pdfjslib/build/pdf.mjs", "pdfjslib/build/pdf.worker.mjs"],
+        "matches": ["<all_urls>"]
+      }
+  ]
   }
