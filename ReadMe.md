@@ -7,7 +7,7 @@ We believe that privacy shouldn't be hidden behind 50 pages of legal jargon. Thi
 Our project uses a specialized Chrome Extension to bridge the gap between complex legal documents and user understanding. By feeding the active page's content into the Google Gemini API, the tool performs a real-time audit of the agreement. It returns a numeric risk and privacy score alongside a breakdown of high-priority concerns and specific rights the user is asked to waive.
 
 ## How we built FinePrint
-1. Browser Interface (JavaScript): We developed a Chrome Extension using a JavaScript-based popup for the user interface.
+1. Browser Interface (JavaScript): We developed a Chrome Extension using a JavaScript-based sidepanel for the user interface.
 2. Content Extraction (Content Scripts): When triggered, a Content Script programmatically scrapes the active website's Terms & Conditions text, ensuring we capture the exact legal language the user is agreeing to.
 3. Backend Processing (Python/Flask): The extension sends this data to our Flask API. This layer acts as the "brain," managing the communication between the browser and the AI.
 4. AI Analysis (Google Gemini API): The Flask app constructs a specialized prompt containing the T&C text and sends it to Google Gemini. The model is instructed to perform a legal audit, specifically looking for privacy risks and rights-forfeiture.
