@@ -1,3 +1,6 @@
+import * as pdfjsLib from '../pdfjslib/build/pdf.mjs';
+pdfjsLib.GlobalWorkerOptions.workerSrc = '../pdfjslib/build/pdf.worker.mjs';
+
 const button = document.getElementById("concerns-button");
 const checklist = document.getElementById("concerns-checklist");
 
@@ -13,10 +16,12 @@ button.addEventListener('click', async(event) => {
     try {
         // Step 1 - Get active tab and ensure we can talk to it
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
         if (!tab?.id) {
             document.getElementById("status").textContent = "No tab found. Open a webpage first.";
             return;
         }
+
         // Pages like chrome://, edge://, or extension store can't run content scripts
         const restricted = /^(chrome|edge|about|chrome-extension):\/\//.test(tab.url || "");
         if (restricted) {
@@ -24,37 +29,52 @@ button.addEventListener('click', async(event) => {
             return;
         }
 
-        // Try to get T&C from content script; inject and retry if not loaded (e.g. tab opened before extension)
-        let response;
-        try {
-            response = await chrome.tabs.sendMessage(tab.id, { action: "extractT&C" });
-        } catch (e) {
-            if (e?.message?.includes("Receiving end does not exist")) {
-                await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ["content.js"] });
+        // get url of current page
+        console.log("Current tab URL:", tab.url);
+
+        let textToAnalyze;
+
+        if(tab.url.endsWith(".pdf")) {
+            // text is a plain string of all the pdf content
+            textToAnalyze = await extractText(tab.url);
+            console.log(textToAnalyze);
+        } else {
+            // Try to get T&C from content script; inject and retry if not loaded (e.g. tab opened before extension)
+            let response;
+
+            try {
                 response = await chrome.tabs.sendMessage(tab.id, { action: "extractT&C" });
-            } else {
-                throw e;
+            } catch (e) {
+                if (e?.message?.includes("Receiving end does not exist")) {
+                    await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ["content.js"] });
+                    response = await chrome.tabs.sendMessage(tab.id, { action: "extractT&C" });
+                } else {
+                    throw e;
+                }
             }
-        }
-        if (response === undefined) {
-            document.getElementById("status").textContent = "Could not read this page. Try refreshing the page, then open the side panel again.";
-            return;
+            if (response === undefined) {
+                document.getElementById("status").textContent = "Could not read this page. Try refreshing the page, then open the side panel again.";
+                return;
+            }
+    
+            if (!response?.found) {
+                document.getElementById("status").textContent = "No Terms & Conditions found on this page.";
+                console.log("No terms and conditions found");
+                return;
+            }
+
+            textToAnalyze = response.text;
         }
 
-        if (!response?.found) {
-            document.getElementById("status").textContent = "No Terms & Conditions found on this page.";
-            console.log("No terms and conditions found");
-            return;
-        }
 
-        console.log(`Found T&C text: ${response.text.length} characters`);
+        console.log(`Found T&C text: ${textToAnalyze.length} characters`);
         document.getElementById("status").textContent = "Analyzing with AI...";
 
         // Step 2 - Send the text to Flask
         const flaskResponse = await fetch("http://127.0.0.1:5000/analyze", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: response.text })
+            body: JSON.stringify({ text: textToAnalyze })
         });
 
         let result;
@@ -112,4 +132,40 @@ function renderList(title, items, bg) {
             </ul>
         </div>
     `;
+}
+
+// loads a pdf and returns the extracted text from within it
+
+function extractText(pdfUrl) {
+    var pdf = pdfjsLib.getDocument(pdfUrl);
+
+    return pdf.promise.then(function (pdf) {
+        var totalPageCount = pdf.numPages;
+        var countPromises = [];
+
+
+        // return each page one by one and use getTextContent to extract text
+        for ( var currentPage = 1; currentPage <= totalPageCount; currentPage++) {
+            var page = pdf.getPage(currentPage);
+            countPromises.push(
+                page.then(function (page) {
+                    var textContent = page.getTextContent();
+                    // returns a promise and adds promise to countPromises
+                    return textContent.then(function (text) {
+                        return text.items
+                        .map(function (s) {
+                            return s.str;
+                        })
+                        .join('');
+                    })
+                })
+            )
+        }
+
+        console.log("Page count", totalPageCount);
+
+        return Promise.all(countPromises).then(function (texts) {
+            return texts.join('');
+        })
+    });
 }

@@ -34,6 +34,15 @@
     <div id="status"></div>
     <div id="results"></div>
 
-    <script src="sidepanel.js"></script>
+    <script type="module" src="sidepanel.js"></script>
+
+    <!-- load the pdf.js library as a module
+    <script type="module">
+        import * as pdfjsLib from 'https://mozilla.github.io/pdf.js/build/pdf.mjs';
+
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+            'https://mozilla.github.io/pdf.mjs/build/pdf.worker.mjs';
+    </script> -->
+    
 </body>
 </html>
