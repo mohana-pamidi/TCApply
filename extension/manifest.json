@@ -4,7 +4,7 @@
     "version": "1.0",
     "manifest_version": 3,
     "action": {
-      "default_icon": "icons/hello_extension.png"
+      "default_icon": "icons/t&c_apply.png"
     },
     "background": {
       "service_worker": "background.js"
