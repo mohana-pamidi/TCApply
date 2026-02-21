@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>My Sidepanel</title>
-  </head>
-  <body>
-    <h1>All sites sidepanel extension</h1>
-    <p>This side panel is enabled on all sites</p>
+<head>
+    <meta charset="UTF-8" />
+    <title>TOS Scanner</title>
+    <style>
+        body { width: 380px; font-family: system-ui, sans-serif; padding: 16px; margin: 0; }
+        h1 { font-size: 18px; margin: 0 0 4px; }
+        #status { color: #666; font-size: 13px; margin-bottom: 12px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 TOS Scanner</h1>
+    <div id="status">Loading...</div>
+    <div id="results"></div>
+
     <script src="sidepanel.js"></script>
-  </body>
+</body>
 </html>
