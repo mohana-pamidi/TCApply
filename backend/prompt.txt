@@ -12,9 +12,6 @@ Terms & Conditions:
 
 Analyze the text and provide the following. 
 
-CRITICAL SCORING INSTRUCTIONS: 
-When calculating the Overall Risk Score, you must use a weighted approach. Do not treat all risks equally. A single severe risk (e.g., unilateral rule changes without notice, mandatory binding arbitration, total IP surrender, or broad indemnification) is highly abusive and should drastically increase the risk Score (e.g., resulting in a 6-10) even if the total number of risks is low. Minor risks (like standard cookies) should barely affect the score.
-
 Provide:
 1. Overall Risk Score: Rate from 1-10 (10 = very high risk, 1 = very low risk), strictly adhering to the weighted scoring instructions above.
 2. Privacy Risk Level: Low / Medium / High.
@@ -23,6 +20,11 @@ Provide:
 5. Positive Clauses: Any unusually user-friendly terms (String array).
 6. Targeted Risk Findings: Specifically address the User's Specific Concerns listed above. State if the risk is present, summarize the relevant clause, and assign a severity score (1-10) if present.
 7. Plain English Summary: A 2-3 sentence summary a non-lawyer would understand.
+
+CRITICAL SCORING & FILTERING INSTRUCTIONS:
+1. PRIMARY LENS: The user's specific concerns ({user_concerns}) are the most important part of this audit. 
+2. OVERALL RISK SCORE: When calculating the Overall Risk Score, you must use a weighted approach. Do not treat all risks equally. A single severe risk (e.g., unilateral rule changes without notice, mandatory binding arbitration, total IP surrender, or broad indemnification) is highly abusive and should drastically increase the risk Score (e.g., resulting in a 6-10) even if the total number of risks is low. Minor risks (like standard cookies) should barely affect the score. A "Critical" risk (unilateral changes, mandatory arbitration) or a direct hit on a user's "{user_concerns}" must result in a score of 8-10.
+3. SILENCE IS RISK: If the user is concerned about a specific right (e.g., "Data Deletion") and the text is silent on it, categorize this as a "High" risk finding in the targeted section.
 
 Respond strictly in the following JSON format only, with no markdown formatting or conversational text:
 {
