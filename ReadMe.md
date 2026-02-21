@@ -63,7 +63,7 @@ Rate as high risk if goes against const. rights
 What we need to do: 
 
 1. Tweak prompt - take in information of usr - more user context 
-2. Shoudl be able to read pdfs 
+2. Should be able to read pdfs 
 3. Expand text when spanding side panel
 4. Checklist for types of risks usr is concerned about 
 5. UI better - loading maginifying glass 
