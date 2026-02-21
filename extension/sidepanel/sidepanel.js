@@ -102,33 +102,34 @@ button.addEventListener('click', async(event) => {
 
 function displayResults(data) {
     const riskColor = { Low: "#22c55e", Medium: "#f59e0b", High: "#ef4444" };
-    const scoreColor = data.fairnessScore >= 7 ? "#22c55e" : data.fairnessScore >= 4 ? "#f59e0b" : "#ef4444";
+    const scoreColor = data.riskScore >= 7 ? "#ef4444" : data.riskScore >= 4 ? "#f59e0b" : "#22c55e";
 
     document.getElementById("results").innerHTML = `
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
             <div style="font-size:36px; font-weight:800; color:${scoreColor}">
-                ${data.fairnessScore}/10
+                ${data.riskScore}/10
             </div>
-            <div style="padding:6px 12px; border-radius:20px; background:${riskColor[data.privacyRisk]}; color:white; font-weight:600;">
-                ${data.privacyRisk} Privacy Risk
+            <div style="padding:6px 12px; border-radius:20px; background:${riskColor[data.privacyRisk] || riskColor.Medium}; color:white; font-weight:600;">
+                ${data.privacyRisk || "—"} Privacy Risk
             </div>
         </div>
 
         <p style="font-size:13px; color:#333; line-height:1.5;">${data.summary}</p>
 
-        ${renderList("⚠️ Key Concerns", data.keyConcerns, "#fef3c7")}
-        ${renderList("🚫 Rights You Give Up", data.rightsGivenUp, "#fee2e2")}
+        ${renderList("⚠️ Key Concerns", data.keyConcerns, "#fef3c7", (i) => typeof i === "string" ? i : `${i.concern || i.rightLost || ""} (${i.severity}/10) — ${i.explanation || ""}`)}
+        ${renderList("🚫 Rights You Give Up", data.rightsGivenUp, "#fee2e2", (i) => typeof i === "string" ? i : `${i.rightLost || i.concern || ""} (${i.severity}/10) — ${i.explanation || ""}`)}
         ${renderList("✅ Positives", data.positives, "#dcfce7")}
     `;
 }
 
-function renderList(title, items, bg) {
+function renderList(title, items, bg, formatItem) {
     if (!items?.length) return "";
+    const format = formatItem || ((i) => typeof i === "string" ? i : String(i));
     return `
         <div style="background:${bg}; padding:10px 12px; border-radius:8px; margin-bottom:8px;">
             <strong>${title}</strong>
             <ul style="margin:6px 0 0; padding-left:18px;">
-                ${items.map(i => `<li style="font-size:12px; margin-bottom:4px;">${i}</li>`).join("")}
+                ${items.map(i => `<li style="font-size:12px; margin-bottom:4px;">${format(i)}</li>`).join("")}
             </ul>
         </div>
     `;

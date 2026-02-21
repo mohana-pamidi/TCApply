@@ -1,0 +1,58 @@
+You are an expert in contract law and digital privacy. Analyze the following Terms & Conditions and provide an assessment based on the provided context.
+
+Context:
+Service Type: {service_type}
+User Jurisdiction: {jurisdiction}
+User's Specific Concerns: {user_concerns}
+
+Terms & Conditions:
+"""
+
+"""
+
+Analyze the text and provide the following. 
+
+CRITICAL SCORING INSTRUCTIONS: 
+When calculating the Overall Risk Score, you must use a weighted approach. Do not treat all risks equally. A single severe risk (e.g., unilateral rule changes without notice, mandatory binding arbitration, total IP surrender, or broad indemnification) is highly abusive and should drastically increase the risk Score (e.g., resulting in a 6-10) even if the total number of risks is low. Minor risks (like standard cookies) should barely affect the score.
+
+Provide:
+1. Overall Risk Score: Rate from 1-10 (10 = very high risk, 1 = very low risk), strictly adhering to the weighted scoring instructions above.
+2. Privacy Risk Level: Low / Medium / High.
+3. Key Concerns: List up to 5 specific, problematic clauses (excluding the user's specific concerns). For each, assign a severity score from 1-10 (10 = critical loss of rights, 1 = minor inconvenience).
+4. Rights You Give Up: What data, rights, or control does the user lose? Assign a severity score from 1-10 to each.
+5. Positive Clauses: Any unusually user-friendly terms (String array).
+6. Targeted Risk Findings: Specifically address the User's Specific Concerns listed above. State if the risk is present, summarize the relevant clause, and assign a severity score (1-10) if present.
+7. Plain English Summary: A 2-3 sentence summary a non-lawyer would understand.
+
+Respond strictly in the following JSON format only, with no markdown formatting or conversational text:
+{
+  "riskScore": 3,
+  "privacyRisk": "High",
+  "keyConcerns": [
+    {
+      "concern": "Unilateral Amendments",
+      "severity": 10,
+      "explanation": "Clause 4.1 allows the company to change the terms at any time without notifying the user."
+    }
+  ],
+  "rightsGivenUp": [
+    {
+      "rightLost": "Right to sue in court",
+      "severity": 9,
+      "explanation": "Mandatory arbitration clause forces all disputes out of the public court system."
+    }
+  ],
+  "positives": [
+    "Clearly states data is not sold to third parties.",
+    "Provides a clear mechanism for account deletion."
+  ],
+  "targetedRiskFindings": [
+    {
+      "concernCategory": "Data selling",
+      "isPresent": true,
+      "severity": 8,
+      "explanation": "Clause 4.2 states they may share your email with third-party marketing partners."
+    }
+  ],
+  "summary": "This contract gives the company significant power over your rights. While they don't sell your data, they force you into arbitration if something goes wrong and reserve the right to change the rules on you without warning."
+}

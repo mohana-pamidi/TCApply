@@ -1,4 +1,3 @@
-# 
 ## Inspiration
 Often times people completely disgard Terms & Conditions and just agree to them without actually reading what rights they are giving up or how much of their privacy they are giving to the company. Our project leverages Google Gemini
 
