@@ -3,6 +3,19 @@ const checklist = document.getElementById("concerns-checklist");
 
 button.addEventListener('click', async(event) => {
 
+    // Collect selected user concerns from checkboxes
+    const selectedConcerns = [];
+    checklist.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+        selectedConcerns.push(checkbox.value);
+    });
+
+    // joing selected concerns into a whole string 
+    const userConcerns = selectedConcerns.length > 0 
+        ? selectedConcerns.join(", ") 
+        : "None provided";
+    
+    console.log("User concerns:", userConcerns);
+
     // hide checklist once button is clicked 
     checklist.style.display = "none";
     console.log("Side panel starting...");
@@ -50,11 +63,14 @@ button.addEventListener('click', async(event) => {
         console.log(`Found T&C text: ${response.text.length} characters`);
         document.getElementById("status").textContent = "Analyzing with AI...";
 
-        // Step 2 - Send the text to Flask
+        // Send the text to Flask but with user preferences now 
         const flaskResponse = await fetch("http://127.0.0.1:5000/analyze", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: response.text })
+            body: JSON.stringify({ 
+                text: response.text,
+                user_concerns: userConcerns
+            })
         });
 
         let result;

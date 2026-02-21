@@ -71,6 +71,7 @@ class GeminiClient:
         text = re.sub(r'(\d+\.\d+)', r'\n\1', text) 
         return text.strip()
     
+    # extrating texts that could be high risk, and makes it a summary to send to the prompt.
     def extract_high_risk_sections(self, text):
         # Diffrent regex patterns 
         risk_patterns = {
@@ -93,7 +94,7 @@ class GeminiClient:
     def update_prompt(self, tos_text, service_type="General", jurisdiction="United States", user_concerns="None provided"):
         cleaned_tos = self.clean_text(tos_text)
     
-        # 3. Smart Truncation (don't cut mid-sentence)
+        # Smart Truncation (don't cut mid-sentence)
         limit = 15000 # Adjusted for tokens vs characters
         if len(cleaned_tos) > limit:
             last_period = cleaned_tos.rfind('.', 0, limit)
@@ -123,7 +124,7 @@ class GeminiClient:
         filled_prompt = filled_prompt.replace("{jurisdiction}", jurisdiction)
         filled_prompt = filled_prompt.replace("{user_concerns}", user_concerns)
 
-        # Set it as the active prompt
+        # Set it as the new prompt
         
         self.prompt = filled_prompt
 
