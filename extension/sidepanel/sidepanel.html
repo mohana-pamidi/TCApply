@@ -9,28 +9,48 @@
         #status { color: #ebe9e9; font-size: 13px; margin-bottom: 12px; }
         #results { color: navy; }
         #concerns-checklist { color: navy; }
+        .info-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-color: #555;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 11px;
+            line-height: 16px;
+            margin-left: 6px;
+            cursor: help;
+            position: relative;
+        }
+        .info-icon:hover::after {
+            content: attr(data-info);
+            position: absolute;
+            left: 20px;
+            top: -5px;
+            background-color: #333;
+            color: white;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            width: 200px;
+            z-index: 100;
+            white-space: normal;
+        }
     </style>
 </head>
 <body>
     <h1>🔍 FinePrint: Terms & Conditions Analyzer 🔍 </h1>
 
     <div id="concerns-checklist">
-        <input type="checkbox" id= "1" value="Data Collection & Sharing">
-        <label for="1">Data Collection & Sharing</label><br>
-
-        <input type="checkbox" id= "2" value="Tracking & Profiling">
-        <label for="2">Tracking & Profiling</label><br>
-
-        <input type="checkbox" id= "3" value="Your Content and IP">
-        <label for="3">Your Content and IP</label><br>
-
-        <input type="checkbox" id= "4" value="Policy Changes">
-        <label for="4">Policy Changes</label><br>
-
-        <input type="checkbox" id= "5" value="Financial & Subscriptions">
-        <label for="5">Financial & Subscriptions</label><br>
-
-        <input type="button" id="concerns-button" value="Submit">
+        <input type="checkbox" id="1" value="Data Collection & Sharing"><label for="1">Data Privacy & Sales</label><span class="info-icon" data-info="How your personal data is collected, stored, shared with third parties, or sold">i</span><br>
+        
+        <input type="checkbox" id="6" value="Arbitration & Class Action"><label for="6">Legal Rights & Arbitration</label><span class="info-icon" data-info="Limits sueing the company in court, joining others in a lawsuit; requires private arbitrator; ">i</span><br>
+        <input type="checkbox" id="7" value="Liability & Indemnity"><label for="7">Financial Risk & Liability</label><span class="info-icon" data-info="Caps on the company's financial responsibilities; User indemnification">i</span><br>
+        <input type="checkbox" id="8" value="AI Training Rights"><label for="8">AI/ML Model Training</label><span class="info-icon" data-info="Whether your content can be used to train AI/ML models or improve algorithms">i</span><br>
+        <input type="checkbox" id="9" value="Account Termination"><label for="9">Account Deletion Rights</label><span class="info-icon" data-info="Conditions for account suspension, termination, and data deletion upon leaving">i</span><br>
+        <input type="checkbox" id="10" value="Policy Changes"><label for="9">Policy Changes</label><span class="info-icon" data-info="Conditions updating terms wihtout notic to user."></span><br>
+        <input type="button" id="concerns-button" value="Analyze Risks">
     </div>
 
     <div id="status"></div>
