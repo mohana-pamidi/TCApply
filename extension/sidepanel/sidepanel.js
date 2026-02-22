@@ -83,11 +83,11 @@ button.addEventListener('click', async(event) => {
         console.log(`Found T&C text: ${textToAnalyze.length} characters`);
         document.getElementById("status").textContent = "Analyzing with AI...";
 
-        // Send the text to Flask but with user preferences now 
+        // Send the text to Flask with user preferences
         const flaskResponse = await fetch("https://tcapply-production.up.railway.app/analyze", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: textToAnalyze })
+            body: JSON.stringify({ text: textToAnalyze, user_concerns: userConcerns })
         });
 
         let result;
